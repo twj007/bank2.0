@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>bank2.0</display-name>
+  <welcome-file-list>
+    <welcome-file>/WEB-INF/jsp/index.jsp</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <servlet-name>index</servlet-name>
+    <jsp-file>/WEB-INF/jsp/index.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>index</servlet-name>
+    <url-pattern>/index.jsp</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>verifycode</servlet-name>
+  	<servlet-class>com.servlet.Kaptcha</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>verifycode</servlet-name>
+  	<url-pattern>/verify.jpg</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>confirm</servlet-name>
+  	<servlet-class>com.servlet.Confirm</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>confirm</servlet-name>
+  	<url-pattern>/confirm</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Login</servlet-name>
+    <servlet-class>com.servlet.Login</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>EnRoll</servlet-name>
+    <servlet-class>com.servlet.EnRoll</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Inquiry</servlet-name>
+    <servlet-class>com.servlet.Inquiry</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Deposit</servlet-name>
+    <servlet-class>com.servlet.Deposit</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Transfer</servlet-name>
+    <servlet-class>com.servlet.Transfer</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Withdrawals</servlet-name>
+    <servlet-class>com.servlet.Withdrawals</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Login</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>EnRoll</servlet-name>
+    <url-pattern>/enroll</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Inquiry</servlet-name>
+    <url-pattern>/inquiry</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Deposit</servlet-name>
+    <url-pattern>/deposit</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Transfer</servlet-name>
+    <url-pattern>/transfer</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Withdrawals</servlet-name>
+    <url-pattern>/withdrawal</url-pattern>
+  </servlet-mapping>
+  
+  
+  <filter>
+   <filter-name>Encoding</filter-name>
+   <filter-class>com.filter.EncodingFilter</filter-class>
+  </filter>
+		  
+  <filter-mapping>
+	<filter-name>Encoding</filter-name>
+	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+</web-app>

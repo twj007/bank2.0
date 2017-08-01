@@ -1,0 +1,53 @@
+
+<html>
+  <head>
+    
+    <title>My JSP 'register.jsp' starting page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />   
+	
+	<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#reg").submit(function(){
+				if($("#name").val() == "" || $("#password").val() == "" || $("#cfmpassword").val() == ""){
+					alert("请确认表单信息！");
+					return false;
+				}
+			});
+			$("#name").blur(function(){
+				if($("#name").val() == ""){
+					$("#nametip").html("用户名不能为空");
+				}	
+			});
+			$("#name").focus(function(){
+				$("nametip").remove();
+			});
+			
+			$("#password").blur(function(){
+				if($("#password").val() == ""){
+					$("#passwordtip").html("用户名不能为空");
+				}	
+			});
+			$("#cfmPassword").blur(function(){
+				if($("#cfmPassword").val() == ""){
+					$("#passwordtip").html("用户名不能为空");
+				}	
+			});
+			$("#password").focus(function(){
+				$("passwordtip").remove();
+			});
+			
+		});
+	
+	</script>
+  </head>
+  
+  <body>
+    <form action = "enroll" method = "post" style = "text-align:center;" id = "reg">
+    	<p>用户名:</p><input type = "text" name = "name" id = "name"><p id = "nametip"></p><br>
+    	<p>密&nbsp;码:</p><input type = "password" name = "password" id = "password"><p id = "passwordtip"></p><br>
+    	<p>确认密码:</p><input type = "password" name = "cfmPassword" id = "password"><p id = "passwordtip"></p><br>
+    	<button id = "submit">提交</button>
+    </form>
+  </body>
+</html>
