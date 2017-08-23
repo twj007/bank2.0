@@ -2,16 +2,17 @@
 	package com.servlet;
 
 	import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import cn.itcast.vcode.utils.VerifyCode;
+	import java.io.IOException;
+	import javax.servlet.ServletException;
+	import javax.servlet.http.HttpServlet;
+	import javax.servlet.http.HttpServletRequest;
+	import javax.servlet.http.HttpServletResponse;
+	import cn.itcast.vcode.utils.VerifyCode;
 	
-	
+	/**
+	 * 生成验证码，并以流返回前台
+	 * 
+	 * */
 	@SuppressWarnings("serial")
 	public class Kaptcha extends HttpServlet {
 
@@ -28,7 +29,7 @@ import cn.itcast.vcode.utils.VerifyCode;
 			VerifyCode vc = new VerifyCode();
 			BufferedImage image = vc.getImage();
 			req.getSession().setAttribute("VC_CODE", vc.getText());
-			System.out.println(vc.getText());
+			//System.out.println(vc.getText());
 			VerifyCode.output(image, resp.getOutputStream());
 			resp.getOutputStream().flush();
 		}

@@ -5,8 +5,9 @@ String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 	String name = "";
 	String password = "";
-	double num = Math.random();
-	//对有cookie的用户直接免验证登陆
+	double num = Math.random();//用于刷新浏览器图片缓存
+	String vc_code = (String)request.getSession().getAttribute("VC_CODE");
+	//对有cookie的用户设置用户名密码
 	if(request.getCookies() != null){
 		Cookie[] c = request.getCookies();
 		for(Cookie ck:c){
@@ -36,21 +37,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
  	<script type="text/javascript">
  		$(document).ready(function(){
  			
- 			var flag = false;
+ 			var verify_data = false;
  			
  			
 	 		$("#code").blur(function(){
-	 			$.get("confirm",{"VC_code":$("#code").val()}, function(data){
-					if(data == "true"){
-					   $("#confirm").empty();
-					   $("#confirm").append("验证码正确");
-						flag = true;					 	
-					}else{
-					   $("#confirm").empty();
-					   $("#confirm").append("验证码不正确");
-					}				
-	 					
-	 			});
+	 			if($("#code").val() != ""){
+		 			$.get("confirm",{"VC_code":$("#code").val()}, function(data){
+						if(data == "true"){
+						   $("#confirm").empty();
+						   $("#confirm").append("验证码正确");
+						   varify_data = data;					 	
+						}else{
+						   $("#confirm").empty();
+						   $("#confirm").append("验证码不正确");
+						}				
+		 					
+		 			});
+		 		}else{
+		 			$("#confirm").empty();
+		 			$("#confirm").append("验证码不能为空");
+		 		}	
 	 	    });
 	 			
 	 		
@@ -77,7 +83,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
  					$("#if_password").append("密码不能为空");
  					return false;
  				}
- 				if(!flag){
+ 				if($("#code").val() != "" && verify_data && <%=vc_code%> == $("#code").val()){
  					$("#if_verify").empty();
  					$("#if_verify").append("验证码不能为空");
  					return false;
@@ -107,9 +113,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		</style>
   <body>
     
-    <form id = "loginin" action = "login" method = "post" >
+    <form id = "loginin" action = "login.do" method = "post" >
     	<div class="main">
-    		<div id="hand"><h1>MYBANK</h1></div>
+    		<div id="hand">
+    			<h1>MYBANK</h1>
+    		</div>
     		
     		<div id="main_container">
     		<hr>
@@ -138,7 +146,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    	    <input style="position:absolute; right: 95px;" type="checkbox" name = "flag" id = "flag"><span  style="position:absolute; right: 26px; color: black;">记住密码</span>
 	    		</div>
 	    		<div>
-	    			<a href = "foundlost.html">忘记密码?</a>
+	    			<a href = "findlost.jsp">忘记密码?</a>
 	    			<a href = "register.html" style="position:absolute; right: 26px;">注册</a>
 	    		</div>
     		</div>

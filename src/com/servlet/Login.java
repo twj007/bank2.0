@@ -22,20 +22,10 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 	public class Login extends HttpServlet {
 		
 		/**
-		 * 
+		 * 登陆验证
 		 */
 		private static final long serialVersionUID = 1L;
-//
-//		@Test
-//		public void foo() throws UnsupportedEncodingException{
-//			//get请求编码
-//			String name = "暗色";
-//			String encode = URLEncoder.encode(name, "UTF-8");
-//			System.out.println(encode);
-//			String decode = URLDecoder.decode(name, "UTF-8");
-//			System.out.println(encode+decode);
-//			
-//		}
+
 		public void doGet(HttpServletRequest request, HttpServletResponse response)
 				throws ServletException, IOException {
 			
@@ -64,6 +54,7 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 					c1.setMaxAge(60*5);
 					response.addCookie(c);
 					response.addCookie(c1);
+					request.getSession().setAttribute("name", name);
 					request.getRequestDispatcher("main.jsp").forward(request, response);
 					
 				}else{
@@ -82,6 +73,7 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 					response.addCookie(c);
 					response.addCookie(c1);
 					response.addCookie(c2);
+					request.getSession().setAttribute("name", name);
 					request.getRequestDispatcher("main.jsp").forward(request, response);
 				}	
 			}else{

@@ -1,13 +1,11 @@
 	package com.servlet;
 	
 	import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+	import javax.servlet.ServletException;
+	import javax.servlet.http.Cookie;
+	import javax.servlet.http.HttpServlet;
+	import javax.servlet.http.HttpServletRequest;
+	import javax.servlet.http.HttpServletResponse;
 
 import com.manager.Manager;
 	
@@ -24,6 +22,10 @@ import com.manager.Manager;
 			this.doPost(request, response);
 		}
 	
+		/**
+		 * 查询余额，根据从cookie中获取的id查询对应的字段的money字段，返回
+		 * 
+		 * */
 		public void doPost(HttpServletRequest request, HttpServletResponse response)
 				throws ServletException, IOException {
 	
@@ -43,10 +45,10 @@ import com.manager.Manager;
 			if(id != 0)
 				balance = manager.inquiry(id);
 			if(balance != null){
-				HttpSession session = request.getSession();
-				session.setAttribute("balance", balance);
-				System.out.println(balance);
-				request.getRequestDispatcher("WEB-INF/jsp/balance.jsp").forward(request, response);
+				//通过流返回余额，前端ajax获取数据显示
+				response.getWriter().write(balance.toString());
+				//System.out.println(balance);
+				
 			}else{
 				
 				response.sendRedirect("main.jsp");

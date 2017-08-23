@@ -4,50 +4,70 @@
 	import java.sql.SQLException;
 
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import com.bean.Account;
+import com.bean.Online;
 import com.bean.Register;
 import com.util.JdbcUtil;
+import com.util.MD5Util;
 	
+	/**
+	 * 持久层，处理银行业务的增删查改
+	 * 
+	 * */
 	public class BankDaoImpl implements BankDao{
 
 		QueryRunner qr = new QueryRunner(JdbcUtil.getDataSource());
-		@Override
+		MD5Util md5 = new MD5Util();
+
+		/**
+		 * 验证登陆
+		 * @param Account account 账号
+		 * @return int 返回登陆用户的id
+		 * */
 		public int confirmLogin(Account account) {
-			String sql      = "SELECT id FROM user WHERE account = ? AND password = ?";
-			String name     = account.getName();
-			String password = account.getPassword();
+			String sql      = "SELECT id, state FROM user WHERE account = ? AND password = ?";
+			String name     = md5.getAlgorithmString(account.getName(), "MD5");
+			String password = md5.getAlgorithmString(account.getPassword(), "MD5");
 			Object[] params = {name, password};
-			Integer flag    = null;
+			Online online   = null;
 			try {
-				flag = (Integer)qr.query(sql, new ScalarHandler(), params);
+				online = (Online)qr.query(sql, new BeanHandler<Online>(Online.class), params);
+				System.out.println(online);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			if(flag != null){
-				return flag;
+			if(online != null){
+				return online.getId();
 			}
 			return 0;
 		}
 
 		@SuppressWarnings("deprecation")
-		@Override
+		/**
+		 * 注册
+		 * @prama Register resgister 注册bean
+		 * @return Integer 返回注册者id
+		 * */
 		public Integer register(Register register) {
-			String account = register.getAccount();
-			String password = register.getPassword();
+			String MD5Account = md5.getAlgorithmString(register.getAccount(), "MD5");
+			String MD5Password = md5.getAlgorithmString(register.getPassword(), "MD5");
+			String email = register.getEmail();
+			
 			String sql = "SELECT account FROM user WHERE account = ? ";
 			String count = null;
-		  
+			
 			try {
-				count = (String)qr.query(sql, account, new ScalarHandler());
+				count = (String)qr.query(sql, MD5Account, new ScalarHandler());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 			if(count != null)
 				return null;
-			sql = "INSERT INTO user(account, password, money) VALUES (?, ?, 0)";
-			Object[] params = {account, password};
+			sql = "INSERT INTO user(account, password, money, state, email) VALUES (?, ?, 0, 1, ?)";
+			Object[] params = {MD5Account, MD5Password, email};
 			try {
 				qr.update(sql, params);
 			} catch (SQLException e) {
@@ -56,7 +76,7 @@ import com.util.JdbcUtil;
 			sql = "SELECT id FROM user WHERE 1 = 1 AND account = ?";
 			Integer ifSuccess = null;
 			try {
-				ifSuccess = (Integer)qr.query(sql, account, new ScalarHandler());
+				ifSuccess = (Integer)qr.query(sql, MD5Account, new ScalarHandler());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -66,7 +86,12 @@ import com.util.JdbcUtil;
 			return null;
 		}
 
-		@Override
+		/**
+		 * 查询银行业务
+		 * @param int id 
+		 * @return double 返回余额
+		 * 
+		 * */
 		public double inquiry(int id) {
 			String sql = "SELECT money FROM user WHERE id = ?";
 			Object param = new Integer(id);
@@ -82,7 +107,12 @@ import com.util.JdbcUtil;
 		}
 
 		@SuppressWarnings("deprecation")
-		@Override
+		/**
+		 * 存款业务
+		 * @param Double deposit 存款金额
+		 * @prama int id
+		 * @return int 返回是否存款成功
+		 * */
 		public int getDeposit(Double deposit, int id) {
 			String sql = "SELECT money FROM user WHERE id = ?";
 			double before = -1;
@@ -107,7 +137,12 @@ import com.util.JdbcUtil;
 		}
 
 		@SuppressWarnings("deprecation")
-		@Override
+		/**
+		 * 取款
+		 * @param double withdrawals 取款金额
+		 * @param int id
+		 * @return int
+		 * */
 		public int setWithdrawals(double withdrawals, int id) {
 			String sql = "SELECT money FROM user WHERE id = ?";
 			double before = -1;
@@ -133,7 +168,13 @@ import com.util.JdbcUtil;
 		}
 
 		@SuppressWarnings("deprecation")
-		@Override
+		/**
+		 * 转账功能
+		 * @param String fromName
+		 * @param int id
+		 * @param double money
+		 * @return boolean
+		 * */
 		public boolean transfer(String fromName, int id, double money) {
 			String sql = "SELECT money FROM user WHERE id = ? ";
 			double total = 0;
@@ -149,6 +190,7 @@ import com.util.JdbcUtil;
 				return false;
 			 
 			sql = "SELECT money FROM user WHERE account = ?";
+			fromName = md5.getAlgorithmString(fromName, "MD5");
 			try {
 				toAfter = total + (Double)qr.query(sql, fromName, new ScalarHandler());
 			} catch (SQLException e) {
@@ -169,6 +211,39 @@ import com.util.JdbcUtil;
 				e.printStackTrace();
 			}
 			return true;
+		}
+
+		@Override
+		public boolean alterPassword(String pass, int id) {
+			
+			
+			String sql = "UPDATE user SET password = ? WHERE id = ?";
+			int flag = -1;
+			pass = md5.getAlgorithmString(pass, "MD5");
+			Object[] params = {pass, id};
+			try {
+				flag = qr.update(sql, params);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			if(flag != -1)
+				return true;
+			return false;
+		}
+		
+		
+		public int getIdByName(String name, String email){
+			String sql = "SELECT id FROM user WHERE account = ? AND email = ?";
+			name = md5.getAlgorithmString(name, "MD5");
+			Object[] params = {name, email};
+			int id = 0;
+			try {
+				id = (Integer)qr.query(sql, new ScalarHandler(), params);
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return id;
 		}
 	
 	}

@@ -2,16 +2,9 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <display-name>bank2.0</display-name>
   <welcome-file-list>
-    <welcome-file>/WEB-INF/jsp/index.jsp</welcome-file>
+    <welcome-file>/index.jsp</welcome-file>
   </welcome-file-list>
-  <servlet>
-    <servlet-name>index</servlet-name>
-    <jsp-file>/WEB-INF/jsp/index.jsp</jsp-file>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>index</servlet-name>
-    <url-pattern>/index.jsp</url-pattern>
-  </servlet-mapping>
+  
   
   <servlet>
   	<servlet-name>verifycode</servlet-name>
@@ -31,6 +24,36 @@
   <servlet-mapping>
   	<servlet-name>confirm</servlet-name>
   	<url-pattern>/confirm</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>email</servlet-name>
+  	<servlet-class>com.servlet.Mail</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>email</servlet-name>
+  	<url-pattern>/email</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>findlost</servlet-name>
+  	<servlet-class>com.servlet.FindLost</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>findlost</servlet-name>
+  	<url-pattern>/findlost</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>alter</servlet-name>
+  	<servlet-class>com.servlet.AlterPassword</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>alter</servlet-name>
+  	<url-pattern>/alterPassword</url-pattern>
   </servlet-mapping>
   
   <servlet>
@@ -59,33 +82,37 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>Login</servlet-name>
-    <url-pattern>/login</url-pattern>
+    <url-pattern>/login.do</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>EnRoll</servlet-name>
-    <url-pattern>/enroll</url-pattern>
+    <url-pattern>/enroll.do</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Inquiry</servlet-name>
-    <url-pattern>/inquiry</url-pattern>
+    <url-pattern>/inquiry.do</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Deposit</servlet-name>
-    <url-pattern>/deposit</url-pattern>
+    <url-pattern>/deposit.do</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Transfer</servlet-name>
-    <url-pattern>/transfer</url-pattern>
+    <url-pattern>/transfer.do</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Withdrawals</servlet-name>
-    <url-pattern>/withdrawal</url-pattern>
+    <url-pattern>/withdrawal.do</url-pattern>
   </servlet-mapping>
   
   
   <filter>
    <filter-name>Encoding</filter-name>
    <filter-class>com.filter.EncodingFilter</filter-class>
+   <init-param>
+   		<param-name>encoding</param-name>
+   		<param-value>UTF-8</param-value>
+   </init-param>
   </filter>
 		  
   <filter-mapping>
@@ -93,4 +120,11 @@
 	<url-pattern>/*</url-pattern>
   </filter-mapping>
   
+  
+  
+ 
+  
+  <session-config>
+  	<session-timeout>5</session-timeout>
+  </session-config>
 </web-app>

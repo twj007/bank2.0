@@ -22,4 +22,8 @@ import com.bean.Register;
 			//转账
 			public boolean transfer(String fromName,int id, double money);
 		
+			//修改密码
+			public boolean alterPassword(String pass, int id);
+			//通过名字查询id
+			public int getIdByName(String name, String email);
 	}

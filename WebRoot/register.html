@@ -6,18 +6,34 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />   
 	
 	<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+	<script type="text/javascript" src="js/validate.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
+			var dat = "";
 			$("#reg").submit(function(){
-				if($("#name").val() == "" || $("#password").val() == "" || $("#cfmpassword").val() == ""){
+				if($("#name").val() == "" || $("#password").val() == "" || $("#cfmpassword").val() == "" || $("#password").val() != $("#cfmpassword").val()){
 					alert("请确认表单信息！");
 					return false;
 				}
+				if($("#email").val() == ""){
+					alert("请填写正确的邮箱信息");
+					return false;
+				}
+				if($("cfmEmail").val() == ""){
+					alert("请填入邮箱验证码");
+					return false;
+				}
+				if($("#cfmEmail").val() == "" || $("#cfmEmail").val() != dat){
+					alert("验证码错误");
+					return false;
+				}
+				return true;
 			});
+			
 			$("#name").blur(function(){
 				if($("#name").val() == ""){
 					$("#nametip").html("用户名不能为空");
-				}	
+				}
 			});
 			$("#name").focus(function(){
 				$("nametip").remove();
@@ -25,29 +41,132 @@
 			
 			$("#password").blur(function(){
 				if($("#password").val() == ""){
-					$("#passwordtip").html("用户名不能为空");
+					$("#passwordtip").html("密码不能为空");
 				}	
 			});
-			$("#cfmPassword").blur(function(){
-				if($("#cfmPassword").val() == ""){
-					$("#passwordtip").html("用户名不能为空");
-				}	
+			$("#cfmpassword").blur(function(){
+				
+				if($("#cfmpassword").val() == ""){
+					alert("密码不能为空");
+				}else if($("#cfmpassword").val() != $("#password").val()){
+					alert("密码不一致");
+				}
+				
 			});
 			$("#password").focus(function(){
 				$("passwordtip").remove();
 			});
 			
+			$("#email").blur(function(){
+				if(! isEmail($("#email").val())){
+					$("#emailtips").append("邮箱格式不正确");
+					return;
+				} else{
+					alert("验证码已发送,请检查");
+					$.post("email",{"email":$("#email").val()}, function(data){
+					 dat = data;
+					});
+				}
+			});
+			
+			$("#email").focus(function(){
+				$("#emailtips").empty();
+			});
+			
+			
+			$("#cfmEmail").blur(function(){
+				
+				if($("#cfmEmail").val() != dat){
+					alert("验证码错误");
+				}
+			});
+			
+			
 		});
 	
+		
+    
 	</script>
   </head>
-  
+  <style>
+  	body{
+  		background: url(img/bg2.jpg);
+  		width:1980px;
+		height:1080px;
+  	}
+  	#main{
+  		width: 500px;
+  		height: 700px;
+  		margin: 50px auto;
+  		background-color: whitesmoke;
+  		border: 1px solid #269ABC;
+  		border-radius: 5px;
+  	}
+  	#head{
+  		display: block;
+  		height: 40px;
+  		width:500px;
+  		background-color: #66AFE9;
+  		color: white;
+  		text-align: center;
+  		
+  	}
+  	#nametip, #passwordtip, #emailtips, #cfmEmailtips{
+  		display: block;
+  		color: red;
+  		width: 200px;
+  		height: 30px;
+  	}
+  	
+  	#info{
+  		display: inline-block;
+  		position: relative;
+  		left: 0px;
+  		background: #269ABC;
+  		border-radius: 5px 0 0 5px;
+  		width: 100px;
+  		height: 40px;
+  		line-height: 40px;
+  	}
+  	#submit{
+  		background: #269ABC;
+  	}
+  	#info:hover,#submit:hover{
+  		background-color: #5E5E5E;
+		color: #FFFF00;
+  	}
+  	#name, #password, #cfmpassword, #email, #cfmEmail{
+  		position: relative;
+  		left: 0px;
+  		top: -1px;
+  		height: 40px;
+  		width: 300px;
+  	}
+  	#submit{
+  		
+  		height: 40px;
+  		width: 400px;
+  		margin: 20px auto;
+  	}
+  </style>
   <body>
-    <form action = "enroll" method = "post" style = "text-align:center;" id = "reg">
-    	<p>用户名:</p><input type = "text" name = "name" id = "name"><p id = "nametip"></p><br>
-    	<p>密&nbsp;码:</p><input type = "password" name = "password" id = "password"><p id = "passwordtip"></p><br>
-    	<p>确认密码:</p><input type = "password" name = "cfmPassword" id = "password"><p id = "passwordtip"></p><br>
-    	<button id = "submit">提交</button>
-    </form>
+    <div id = "main">
+    	<h1 id = "head">用户注册</h1>
+	      <div>	
+	    	<form action="enroll.do" method = "post" style = "text-align:center;" id = "reg">
+		    	<span id="info">用户名:</span><input type = "text" name = "name" id = "name"><br>
+		    	<span id="nametip"></span>
+		    	<span id="info">密&nbsp;码:</span><input type = "password" name = "password" id = "password"><br>
+		    	<span id="passwordtip"></span>
+		    	<span id="info">确认密码:</span><input type = "password" name = "cfmPassword" id = "cfmpassword"><br>
+		    	<span id="passwordtip"></span>
+		    	<span id="info">邮箱:</span><input type="text" name="email" id="email">
+		    	<span id="emailtips"></span>
+		    	<span id="info">邮箱验证码:</span><input type="text" nmae="cfmEmail" id="cfmEmail">
+		    	<span id="cfmEmailtips"></span>
+		    	<button id = "submit">提交</button>
+	    	</form>
+	      </div>	
+    </div>
   </body>
 </html>

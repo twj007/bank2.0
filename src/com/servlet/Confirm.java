@@ -8,6 +8,9 @@
 	import javax.servlet.http.HttpServletRequest;
 	import javax.servlet.http.HttpServletResponse;
 
+	/**
+	 * 比较传过来的验证码和生成的验证码是否一致
+	 * */
 	@SuppressWarnings("serial")
 	public class Confirm extends HttpServlet{
 

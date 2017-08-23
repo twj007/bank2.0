@@ -69,5 +69,13 @@ import com.factory.Factory;
 			return moneyDaoImpl.transfer(fromName, id, money);
 		}
 		
+		public boolean alterPassword(String password, int id){
+			
+			return moneyDaoImpl.alterPassword(password, id);
+		}
+		
+		public int getIdByName(String name, String email){
+			return moneyDaoImpl.getIdByName(name, email);
+		}
 		
 	}
